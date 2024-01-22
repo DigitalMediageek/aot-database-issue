@@ -9,6 +9,10 @@ JPA or custom datasources.
 Uses Spring Boot 3.2.0 and GraalVM 21.
 Uses PostgreSQL DB on localhost.
 
+Spring Boot 3.2.0 was choosen on purpose, because
+* 3.2.1 has an issue with OAuth: https://github.com/spring-projects/spring-security/issues/14362
+* 3.2.2 has an issue with `Unpaged`: https://github.com/spring-projects/spring-data-commons/issues/3025
+
 ### 1.2 Usage
 Run either with JVM by executing `mvn spring-boot:run` or as native image by compiling it with `mvn -Pnative native:compile` and executing generated plattform binary.
 
