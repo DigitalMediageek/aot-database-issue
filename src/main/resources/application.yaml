@@ -1,0 +1,16 @@
+# Datasource properties for default datasource:
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/graal
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa.hibernate.ddl-auto: update
+
+# Datasource properties for custom datasource:
+#graal:
+#  datasource:
+#    jdbcUrl: jdbc:postgresql://localhost:5432/graal
+#    driverClassName: org.postgresql.Driver
+#    username: postgres
+#    password: postgres
