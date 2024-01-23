@@ -1,4 +1,4 @@
-package com.example.database.entity;
+package com.example.database.entity.graal1;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class MyData {
+public class MyData1 {
 
     @Id
     private String id;

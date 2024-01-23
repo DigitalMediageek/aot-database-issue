@@ -1,16 +1,19 @@
-# Datasource properties for default datasource:
-spring:
+# Datasource properties of first datasource:
+graal1:
   datasource:
-    url: jdbc:postgresql://localhost:5432/graal
+    jdbcUrl: jdbc:postgresql://localhost:5432/graal1
+    driverClassName: org.postgresql.Driver
     username: postgres
     password: postgres
-    driver-class-name: org.postgresql.Driver
-  jpa.hibernate.ddl-auto: update
+  jpa:
+    hibernate.hbm2ddl.auto: update
 
-# Datasource properties for custom datasource:
-#graal:
-#  datasource:
-#    jdbcUrl: jdbc:postgresql://localhost:5432/graal
-#    driverClassName: org.postgresql.Driver
-#    username: postgres
-#    password: postgres
+# Datasource properties of second datasource:
+graal2:
+  datasource:
+    jdbcUrl: jdbc:postgresql://localhost:5432/graal2
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate.hbm2ddl.auto: update

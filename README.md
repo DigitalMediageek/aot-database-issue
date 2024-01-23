@@ -1,88 +1,38 @@
-# aot-database-issue
-Database issue with spring boot 3.2.0 and native image: not a managed type
+# native-multiple-databases
 
 ## 1. Introduction
-This example spring boot project demonstrates differences when building native images using default
-JPA or custom datasources.
+This sample project show how to use multiple database with spring boot and get it running with native images, successfully.
 
 ### 1.1 Requirements
 Uses Spring Boot 3.2.0 and GraalVM 21.
-Uses PostgreSQL DB on localhost.
+Uses PostgreSQL DB on localhost. Adopt database to your needs.
 
 Spring Boot 3.2.0 was choosen on purpose, because
 * 3.2.1 has an issue with OAuth: https://github.com/spring-projects/spring-security/issues/14362
 * 3.2.2 has an issue with `Unpaged`: https://github.com/spring-projects/spring-data-commons/issues/3025
 
 ### 1.2 Usage
-Run either with JVM by executing `mvn spring-boot:run` or as native image by compiling it with `mvn -Pnative native:compile` and executing generated plattform binary.
+Compile with `mvn -Pnative native:compile`. Run by executing native platform binary from directory `target`.
 
-After application has been started it will create an entry in table `mydata` by processing code in `DatabaseApplication` which is annotated with `@PostConstruct`.
-
-**Note:** Please run with default JPA first, to make sure schema `graal` is being created.
+After application has been started it will create an entry in table `mydata` of both databases by processing code in `DatabaseApplication` which is annotated with `@PostConstruct`.
 
 ## 2. Database setup
-### 2.1 Default spring JPA
-To run example with default JPA, follow these steps:
-* Comment out code from class `com.example.database.hikari.GraalDbConfig`:
-
-```java
-/*
-@EnableJpaRepositories(
-        entityManagerFactoryRef = "graalEMF",
-        basePackages = { "com.example.database.entity" }
-)
-@Configuration
- */
-public class GraalDbConfig {
-    /*
-            ... 8< ...
-            ... >8 ...
-     */
-}
-```
-* Use corresponding datasource definition in `application.yaml`
-
+Two datasources are configured in `application.yaml`:
 ```yaml
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/graal
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
-  jpa.hibernate.ddl-auto: update
-```
-* Build and run application
-
-`mvn clean spring-boot:run` or `mvn clean -Pnative native:compile` and run executable from `target`
-
-Both ways to run application will be successfull.
-
-### 2.2 Custom datasource
-To run example with custom datasource, follow these steps:
-* Uncomment any code from class `com.example.database.hikari.GraalDbConfig`
-* Use corresponding datasource definition in `application.yaml`
-
-```yaml
-graal:
+graal1:
   datasource:
     jdbcUrl: jdbc:postgresql://localhost:5432/graal
     driverClassName: org.postgresql.Driver
     username: postgres
     password: postgres
 ```
-
-* Build and run application
-
-`mvn clean spring-boot:run` or `mvn clean -Pnative native:compile` and run executable from `target`
-
-`mvn clean spring-boot:run` will run successfully. However, executing the native binary will fail with
-
-```
-org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'databaseApplication': Unsatisfied dependency expressed through field 'repository': Error creating bean with name 'myDataRepository': Not a managed type: class com.example.database.entity.MyData
-        at org.springframework.beans.factory.aot.AutowiredFieldValueResolver.resolveValue(AutowiredFieldValueResolver.java:194) ~[na:na]
-        at org.springframework.beans.factory.aot.AutowiredFieldValueResolver.resolveObject(AutowiredFieldValueResolver.java:154) ~[na:na]
-        at org.springframework.beans.factory.aot.AutowiredFieldValueResolver.resolve(AutowiredFieldValueResolver.java:143) ~[na:na]
-        at com.example.database.DatabaseApplication__Autowiring.apply(DatabaseApplication__Autowiring.java:17) ~[na:na]
-        ...
+```yaml
+graal2:
+  datasource:
+    jdbcUrl: jdbc:postgresql://localhost:5432/graal2
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
 ```
 
+Pay attention to parameter `@Qualifier("graalPMT")PersistenceManagedTypes persistenceManagedTypes` of `LocalContainerEntityManagerFactoryBean` in database configurations. This is required to prevent `Not a managed type` exception message, heavily documented on StackOverflow when running as a native app.
