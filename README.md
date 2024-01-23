@@ -36,3 +36,5 @@ graal2:
 ```
 
 Pay attention to parameter `@Qualifier("graalPMT")PersistenceManagedTypes persistenceManagedTypes` of `LocalContainerEntityManagerFactoryBean` in database configurations. This is required to prevent `Not a managed type` exception message, heavily documented on StackOverflow when running as a native app.
+
+Spring documentation about it can be found here: https://docs.spring.io/spring-framework/reference/core/aot.html#aot.bestpractices.jpa
